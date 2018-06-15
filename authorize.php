@@ -9,13 +9,12 @@ header('Access-Control-Allow-Origin:*');
 // 响应类型  
 header('Access-Control-Allow-Methods:*');  
 // 响应头设置  
-header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
-$con = mysqli_connect('localhost','root','root');
-if (!$con)
-{
-    die('Could not connect: ' . mysqli_error($con));
+header('Access-Control-Allow-Headers:x-requested-with,content-type');
+$con = mysqli_connect('localhost', 'root', 'root');
+if (!$con) {
+  die('Could not connect: ' . mysqli_error($con));
 }
-mysqli_select_db($con,"my_oauth2_db");
+mysqli_select_db($con, "admin");
 mysqli_set_charset($con, "utf8");
 
 
@@ -37,27 +36,40 @@ if (!$server->validateAuthorizeRequest($request, $response)) {
 
 // display an authorization form
 
-// if (empty($_POST)) {
+if (empty($_POST)) {
 
-//   exit('
+  exit('
+<p></p>
+<form method="post">
 
-// <form method="post">
+  <input type="input"
+  name="username">
+  <input type="input"
+  name="password">
 
-//   <input type="input"
-//   name="username">
-//   <input type="input"
-//   name="password">
+  <input type="submit"
+value="submit">
 
-//   <input type="submit"
-// value="submit">
+</form>');
 
-// </form>');
+}
 
-// }
+$username = $_POST['username'];
+$password = $_POST['password'];
+$password = md5(sha1($password));
+$getUser = "select * from user where username = '" . $username . "'";
+$userList = mysqli_query($con, $getUser);
+// $results = array();
+while ($row = mysqli_fetch_assoc($userList)) {
+  $user = $row;
+}
+if($user["password"] != $password){
+  $response->send();
 
-// $username = $_POST['username'];
-// $password = $_POST['password'];
- 
+  die;
+}
+
+
 
 
 // print the authorization code if the user has authorized your client
@@ -66,16 +78,16 @@ if (!$server->validateAuthorizeRequest($request, $response)) {
 $is_authorized = true;
 // $userid = $_POST['userid'];
 
-$server->handleAuthorizeRequest($request, $response, $is_authorized);
+$server->handleAuthorizeRequest($request, $response, $is_authorized,$userid);
 
 if ($is_authorized) {
 
   // this is only here so that you get to see your code in the cURL request. Otherwise, we'd redirect back to the client
   $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=') + 5, 40);
   $state = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=') + 52, 40);
-  $arr = ['response'=>$response,'code'=>$code,'state'=>$state];
-  
-  echo(json_encode($arr));
+  $arr = ['response' => $response, 'code' => $code, 'state' => $state];
+
+  echo (json_encode($arr));
 
 }
 
