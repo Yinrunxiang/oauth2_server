@@ -17,7 +17,7 @@ if
 
 }
 
+$token = $server->getAccessTokenData(OAuth2\Request::createFromGlobals());
+
 echo
-json_encode(array('success'
-=> true, 'message'
-=> 'You accessed my APIs!'));
+"User ID associated with this token is {$token['user_id']}";

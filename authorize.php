@@ -14,7 +14,7 @@ $con = mysqli_connect('localhost', 'root', 'root');
 if (!$con) {
   die('Could not connect: ' . mysqli_error($con));
 }
-mysqli_select_db($con, "admin");
+mysqli_select_db($con, "user");
 mysqli_set_charset($con, "utf8");
 
 
@@ -46,7 +46,8 @@ if (empty($_POST)) {
   name="username">
   <input type="input"
   name="password">
-
+  <input type="input"
+  name="user_id">
   <input type="submit"
 value="submit">
 
@@ -54,18 +55,28 @@ value="submit">
 
 }
 
+function user_md5($str, $auth_key = '')
+{
+    return '' === $str ? '' : md5(sha1($str) . $auth_key);
+}
+
 $username = $_POST['username'];
 $password = $_POST['password'];
-$password = md5(sha1($password));
+$user_id = $_POST['user_id'];
+if ($username != 'admin' && $password != 'admin') {
+  $response->send();
+  die;
+}
 $getUser = "select * from user where username = '" . $username . "'";
 $userList = mysqli_query($con, $getUser);
-// $results = array();
+$results = array();
 while ($row = mysqli_fetch_assoc($userList)) {
-  $user = $row;
+  $results[] = $row;
 }
-if($user["password"] != $password){
+if($results[0]["password"] != user_md5($password)){
+  echo "Please enter the correct account password";
+  echo ('1:'.$results[0]["password"].'.2:'. md5(sha1($password)));
   $response->send();
-
   die;
 }
 
@@ -76,9 +87,8 @@ if($user["password"] != $password){
 
 // $is_authorized = ($_POST['authorized'] === 'yes');
 $is_authorized = true;
-// $userid = $_POST['userid'];
 
-$server->handleAuthorizeRequest($request, $response, $is_authorized,$userid);
+$server->handleAuthorizeRequest($request, $response, $is_authorized,$user_id);
 
 if ($is_authorized) {
 
