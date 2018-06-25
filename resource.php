@@ -19,5 +19,4 @@ if
 
 $token = $server->getAccessTokenData(OAuth2\Request::createFromGlobals());
 
-echo
-"User ID associated with this token is {$token['user_id']}";
+echo $token['user_id'];
