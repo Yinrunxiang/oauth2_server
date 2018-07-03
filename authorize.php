@@ -42,11 +42,11 @@ if (empty($_POST)) {
 <p></p>
 <form method="post">
 
-  <input type="input"
+  Account: <input type="input"
   name="username">
-  <input type="input"
+  Password: <input type="input"
   name="password">
-  <input type="input"
+  token: <input type="input"
   name="user_id">
   <input type="submit"
 value="submit">
