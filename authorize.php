@@ -41,16 +41,10 @@ if (empty($_POST)) {
   exit('
 <p></p>
 <form method="post">
-
-  Account: <input type="input"
-  name="username">
-  Password: <input type="input"
-  name="password">
   token: <input type="input"
   name="user_id">
   <input type="submit"
 value="submit">
-
 </form>');
 
 }
@@ -60,25 +54,25 @@ function user_md5($str, $auth_key = '')
     return '' === $str ? '' : md5(sha1($str) . $auth_key);
 }
 
-$username = $_POST['username'];
-$password = $_POST['password'];
+// $username = $_POST['username'];
+// $password = $_POST['password'];
 $user_id = $_POST['user_id'];
-if ($username != 'admin' && $password != 'admin') {
-  $response->send();
-  die;
-}
-$getUser = "select * from user where username = '" . $username . "'";
-$userList = mysqli_query($con, $getUser);
-$results = array();
-while ($row = mysqli_fetch_assoc($userList)) {
-  $results[] = $row;
-}
-if($results[0]["password"] != user_md5($password)){
-  echo "Please enter the correct account password";
-  echo ('1:'.$results[0]["password"].'.2:'. md5(sha1($password)));
-  $response->send();
-  die;
-}
+// if ($username != 'admin' && $password != 'admin') {
+//   $response->send();
+//   die;
+// }
+// $getUser = "select * from user where username = '" . $username . "'";
+// $userList = mysqli_query($con, $getUser);
+// $results = array();
+// while ($row = mysqli_fetch_assoc($userList)) {
+//   $results[] = $row;
+// }
+// if($results[0]["password"] != user_md5($password)){
+//   echo "Please enter the correct account password";
+//   echo ('1:'.$results[0]["password"].'.2:'. md5(sha1($password)));
+//   $response->send();
+//   die;
+// }
 
 
 
